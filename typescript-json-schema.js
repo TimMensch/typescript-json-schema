@@ -109,6 +109,8 @@ var TJS;
                     var isInteger = (definition.type == "integer" || (reffedType && reffedType.getName() == "integer"));
                     definition.type = isInteger ? "integer" : "number";
                     break;
+                case "true":
+                case "false":
                 case "boolean":
                     definition.type = "boolean";
                     break;
@@ -125,7 +127,10 @@ var TJS;
                     definition.format = "date-time";
                     break;
                 default:
-                    if (propertyType.flags & ts.TypeFlags.Tuple) {
+                    if (propertyType.flags & ts.TypeFlags.BooleanLiteral) {
+                        definition.type = "boolean";
+                    }
+                    else if (propertyType.flags & ts.TypeFlags.Tuple) {
                         var tupleType = propertyType;
                         var fixedTypes = tupleType.elementTypes.map(function (elType) { return _this.getTypeDefinition(elType, tc); });
                         definition.type = "array";
@@ -145,7 +150,7 @@ var TJS;
                         definition.items = this.getTypeDefinition(arrayType, tc);
                     }
                     else {
-                        console.error("Unsupported type: ", propertyType);
+                        console.error("Unsupported type: " + propertyTypeString + ":" + JSON.stringify(propertyType) + ":" + propertyType.flags + ":" + symbol);
                     }
             }
             return definition;

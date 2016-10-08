@@ -142,6 +142,8 @@ export module TJS {
                     const isInteger = (definition.type == "integer" || (reffedType && reffedType.getName() == "integer"));
                     definition.type = isInteger ? "integer" : "number";
                     break;
+                case "true": // fall through
+                case "false": // fall through
                 case "boolean":
                     definition.type = "boolean";
                     break;
@@ -159,7 +161,9 @@ export module TJS {
                     definition.format = "date-time";
                     break;
                 default:
-                    if(propertyType.flags & ts.TypeFlags.Tuple) { // tuple
+                    if (propertyType.flags & ts.TypeFlags.BooleanLiteral) { // boolean
+                        definition.type = "boolean";
+                    } else if (propertyType.flags & ts.TypeFlags.Tuple) { // tuple
                         const tupleType = /*<ts.TupleType>*/<any>propertyType;
                         const fixedTypes = tupleType.elementTypes.map(elType => this.getTypeDefinition(elType, tc));
                         definition.type = "array";
@@ -177,7 +181,7 @@ export module TJS {
                         definition.items = this.getTypeDefinition(arrayType, tc);
                     } else {
                         // TODO
-                        console.error("Unsupported type: ", propertyType);
+                        console.error(`Unsupported type: ${propertyTypeString}:${JSON.stringify(propertyType)}:${propertyType.flags}:${symbol}`);
                         //definition = this.getTypeDefinition(propertyType, tc);
                     }
             }
