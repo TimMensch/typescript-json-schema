@@ -1,5 +1,6 @@
 type result = "ok" | "fail" | "abort";
 
 class MyObject {
-	foo: result
+    foo: result;
+    bar: result | string;
 }

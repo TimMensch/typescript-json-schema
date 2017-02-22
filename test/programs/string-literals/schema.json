@@ -3,18 +3,22 @@
     "properties": {
         "foo": {
             "$ref": "#/definitions/result"
+        },
+        "bar": {
+            "type": "string"
         }
     },
     "required": [
-        "foo"
+        "foo",
+        "bar"
     ],
     "definitions": {
         "result": {
             "type": "string",
             "enum": [
-                "ok",
+                "abort",
                 "fail",
-                "abort"
+                "ok"
             ]
         }
     },
